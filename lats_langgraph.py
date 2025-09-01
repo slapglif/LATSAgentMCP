@@ -1611,7 +1611,9 @@ Decision:"""
     async def _generate_executive_summary(self, result: Dict, vulnerability_findings: List, file_analysis: Dict) -> str:
         """Generate executive summary using LLM analysis"""
         try:
-            prompt = f"""Based on this security investigation, write a concise executive summary (2-3 paragraphs):
+            prompt = f"""Based on this security investigation using LATS (Language Agent Tree Search), write a concise executive summary (2-3 paragraphs):
+
+LATS is a Language Agent Tree Search algorithm that uses Monte Carlo Tree Search to systematically explore codebases for security vulnerabilities.
 
 Task: {result['task']}
 Duration: {result['duration_seconds']:.1f} seconds
