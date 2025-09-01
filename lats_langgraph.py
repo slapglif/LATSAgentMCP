@@ -783,9 +783,15 @@ Full traceback: {error_details[-500:]}"""
             return f"Error executing {action}: {str(e)}"
     
     async def _reflect_on_action(self, node: Node, task: str) -> float:
-        """Reflect on action and assign quality score"""
+        """Reflect on action and assign quality score with repetition penalty"""
         if not node.observation:
             return 1.0
+        
+        # Check for repeated actions in the path to prevent local maxima
+        repetition_penalty = self._calculate_repetition_penalty(node)
+        
+        # Context-aware scoring based on task type
+        task_context = self._get_task_context(task)
         
         prompt = f"""Task: {task}
 
@@ -793,9 +799,10 @@ Action taken: {node.action}
 Observation: {node.observation}
 
 Rate this action's value for solving the task (1-10 scale):
-- How relevant is the observation to finding security vulnerabilities?
+- How relevant is the observation to {task_context}?
 - Does it reveal important information about the codebase?
 - Does it help progress toward the goal?
+- Consider: Is this action exploring new ground or repeating previous work?
 
 Score (1-10):"""
         
@@ -825,7 +832,12 @@ Score (1-10):"""
                     break
             
             if score is not None:
-                return min(max(score, 1.0), 10.0)  # Clamp to 1-10
+                # Apply repetition penalty and context-aware adjustments
+                adjusted_score = self._apply_scoring_adjustments(
+                    score, node, task, repetition_penalty, task_context
+                )
+                print(f"      📊 Adjusted score: {score} -> {adjusted_score} (rep penalty: {repetition_penalty})")
+                return min(max(adjusted_score, 1.0), 10.0)  # Clamp to 1-10
             else:
                 logger.warning(f"⚠️ Could not extract score from: {content[:100]}")
                 print(f"      ⚠️ No score found in response, asking LLM to re-evaluate...")
@@ -837,6 +849,95 @@ Score (1-10):"""
             print(f"      ❌ Scoring error: {str(e)}")
             # Use Ollama to score this error scenario
             return await self._score_error_scenario(node, task, str(e))
+    
+    def _calculate_repetition_penalty(self, node: Node) -> float:
+        """Calculate penalty for repeated actions to prevent local maxima"""
+        if not node.action:
+            return 0.0
+        
+        # Extract action type (e.g., "list_directory" from "list_directory('.')")
+        action_type = node.action.split('(')[0] if '(' in node.action else node.action
+        
+        # Count how many times this action type appears in the path
+        repetitions = 0
+        current = node.parent
+        while current:
+            if current.action:
+                current_type = current.action.split('(')[0] if '(' in current.action else current.action
+                if current_type == action_type:
+                    repetitions += 1
+            current = current.parent
+        
+        # Also check siblings to prevent breadth-wise repetition
+        if node.parent:
+            for sibling in node.parent.children:
+                if sibling.id != node.id and sibling.action:
+                    sibling_type = sibling.action.split('(')[0] if '(' in sibling.action else sibling.action
+                    if sibling_type == action_type:
+                        repetitions += 0.5  # Half penalty for sibling repetition
+        
+        # Calculate penalty (increases with each repetition)
+        penalty = repetitions * 2.0  # -2 points per repetition
+        return min(penalty, 5.0)  # Cap at -5 to avoid over-penalization
+    
+    def _get_task_context(self, task: str) -> str:
+        """Determine task context for context-aware scoring"""
+        task_lower = task.lower()
+        
+        if any(word in task_lower for word in ['security', 'vulnerability', 'exploit', 'attack']):
+            return "finding security vulnerabilities"
+        elif any(word in task_lower for word in ['performance', 'optimize', 'bottleneck', 'slow']):
+            return "identifying performance issues"
+        elif any(word in task_lower for word in ['architecture', 'structure', 'design', 'pattern']):
+            return "understanding system architecture"
+        elif any(word in task_lower for word in ['bug', 'error', 'fix', 'issue', 'problem']):
+            return "finding and fixing bugs"
+        elif any(word in task_lower for word in ['list', 'show', 'display', 'find files']):
+            return "exploring the file structure"
+        else:
+            return "completing the investigation"
+    
+    def _apply_scoring_adjustments(self, base_score: float, node: Node, task: str, 
+                                   repetition_penalty: float, task_context: str) -> float:
+        """Apply various scoring adjustments to prevent exploitation"""
+        adjusted_score = base_score
+        
+        # Apply repetition penalty
+        adjusted_score -= repetition_penalty
+        
+        # Context-specific adjustments
+        if node.action and 'list_directory' in node.action:
+            # Directory listing gets capped based on context
+            if "security" in task_context or "bug" in task_context:
+                adjusted_score = min(adjusted_score, 6.0)  # Cap at 6 for non-exploration tasks
+            elif "exploring" not in task_context:
+                adjusted_score = min(adjusted_score, 7.0)  # Cap at 7 for other tasks
+        
+        # Bonus for deep exploration (encourage going deeper)
+        depth_bonus = min(node.depth * 0.5, 2.0)  # Up to +2 for deep exploration
+        adjusted_score += depth_bonus
+        
+        # Diversity bonus - reward trying different action types
+        diversity_bonus = self._calculate_diversity_bonus(node)
+        adjusted_score += diversity_bonus
+        
+        return adjusted_score
+    
+    def _calculate_diversity_bonus(self, node: Node) -> float:
+        """Calculate bonus for action diversity"""
+        if not node.parent:
+            return 0.0
+        
+        # Get all action types used by siblings
+        action_types = set()
+        for child in node.parent.children:
+            if child.action:
+                action_type = child.action.split('(')[0] if '(' in child.action else child.action
+                action_types.add(action_type)
+        
+        # Bonus increases with diversity
+        diversity_bonus = len(action_types) * 0.3  # +0.3 per unique action type
+        return min(diversity_bonus, 2.0)  # Cap at +2
     
     async def _score_error_scenario(self, node: Node, task: str, error_msg: str) -> float:
         """Use Ollama to score error scenarios - NO hardcoded values"""
