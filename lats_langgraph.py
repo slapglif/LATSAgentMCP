@@ -739,6 +739,10 @@ Full traceback: {error_details[-500:]}"""
                 
             elif func_name == "list_directory" and "directory_path=" in args_str:
                 dir_path = args_str.split('directory_path=')[1].strip().strip('"\'')
+                # Handle absolute and relative paths safely
+                import os
+                if dir_path.startswith('/') and not os.path.exists(dir_path):
+                    return f"Directory not found: {dir_path}"
                 result = list_directory_tree(dir_path, max_depth=2)
                 return result
                 
@@ -832,12 +836,15 @@ Score (1-10):"""
                     break
             
             if score is not None:
+                # Ensure score is in valid range before adjustments
+                score = min(max(score, 1.0), 10.0)  # Clamp raw score first
+                
                 # Apply repetition penalty and context-aware adjustments
                 adjusted_score = self._apply_scoring_adjustments(
                     score, node, task, repetition_penalty, task_context
                 )
                 print(f"      📊 Adjusted score: {score} -> {adjusted_score} (rep penalty: {repetition_penalty})")
-                return min(max(adjusted_score, 1.0), 10.0)  # Clamp to 1-10
+                return min(max(adjusted_score, 1.0), 10.0)  # Final clamp to 1-10
             else:
                 logger.warning(f"⚠️ Could not extract score from: {content[:100]}")
                 print(f"      ⚠️ No score found in response, asking LLM to re-evaluate...")
