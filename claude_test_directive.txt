@@ -1,0 +1,40 @@
+You are testing the LATS Codebase Analyzer MCP server. Your task is to thoroughly test and report on its capabilities.
+
+TESTS TO PERFORM:
+
+1. **Quick Overview Test**
+   - Use quick_codebase_overview tool on the current directory
+   - Report the file structure and statistics you discover
+
+2. **Pattern Search Test** 
+   - Use find_code_patterns to search for "class" in *.py files
+   - Report what class definitions you find and in which files
+
+3. **File Analysis Test**
+   - Use analyze_file_structure on "lats_langgraph.py" 
+   - Report the structure, dependencies, and insights you discover
+
+4. **Deep Analysis Test**
+   - Use analyze_codebase with task: "Understand the LATS implementation and architecture"
+   - Let this run completely and report all findings
+   - Note how many investigation steps it takes
+   - Document any insights about the codebase architecture
+
+5. **Performance Analysis Test**
+   - Use analyze_codebase with task: "Identify performance bottlenecks and optimization opportunities"
+   - Report any performance insights discovered
+
+For each test:
+- Report exactly what the tool returned
+- Note any errors or issues
+- Assess the usefulness and accuracy of the results
+- Comment on the tool's effectiveness
+
+FINAL ASSESSMENT:
+Provide a comprehensive evaluation of:
+- Which tools work best for different use cases
+- The quality and depth of analysis provided
+- Any limitations or areas for improvement
+- Overall assessment of the MCP server's capabilities
+
+Be thorough and detailed in your testing and reporting.

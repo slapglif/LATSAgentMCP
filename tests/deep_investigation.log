@@ -1,0 +1,197 @@
+2025-09-01 14:42:49 | INFO | 🚀 Initializing LATS Agent (session: 9b762476)
+2025-09-01 14:42:49 | INFO | 📊 Configuration: Deep investigation mode - no artificial limits
+2025-09-01 14:42:49 | SUCCESS | ✅ LATS Agent initialized successfully
+2025-09-01 14:42:49 | INFO | 🤖 Starting LATS investigation: Find all authentication vulnerabilities in sample_codebase
+2025-09-01 14:42:49 | INFO | 🚀 Launching LangGraph execution
+2025-09-01 14:42:49 | INFO | 🌱 Starting LATS investigation: Find all authentication vulnerabilities in sample_codebase
+2025-09-01 14:42:49 | INFO | 🎯 Generating initial actions from root node
+2025-09-01 14:42:52 | INFO | 🌿 Generated 5 initial actions: ["list_directory('.')", "search_files('auth', '.', '*.py')", "search_files('password', '.', '*.py')", "search_files('eval', '.', '*.py')", "search_files('sql', '.', '*.py)"]
+2025-09-01 14:42:52 | DEBUG | ➕ Added child node 1: list_directory('.')
+2025-09-01 14:42:52 | INFO | ⚡ Executing action: list_directory('.')
+2025-09-01 14:42:52 | DEBUG | 📝 Action observation: tests/
+├── sample_codebase/
+│   ├── auth/
+│   ├── database/
+│   ├── utils/
+│   ├── demo_memory.db (49152B)
+│   ├── lats_investigation_report_20250901_143120.md (3799B) [markdown]
+│   ├── lats_investigation_report_20250901_143658.md (4080B) [markdown]
+│   ├── lats_memory.db (716800B)
+│   ├── real_tes...
+2025-09-01 14:42:55 | INFO | 📊 Action scored: 7.0/10 for action: list_directory('.')
+2025-09-01 14:42:55 | DEBUG | ⬆️ Backpropagated score 7.0 through tree
+2025-09-01 14:42:55 | DEBUG | ➕ Added child node 2: search_files('auth', '.', '*.py')
+2025-09-01 14:42:55 | INFO | ⚡ Executing action: search_files('auth', '.', '*.py')
+2025-09-01 14:42:55 | DEBUG | 📝 Action observation: Found 67 matches for 'auth':
+
+/home/ubuntu/lats/tests/run_agent_demo.py:
+      41:     # Investigation task>>>   42:     task = "Find all authentication bugs and security vulnerabilities in the login module"      43: 
+
+/home/ubuntu/lats/tests/test_official_lats.py:
+      31:     print("🧠 Agent knowl...
+2025-09-01 14:43:01 | INFO | 📊 Action scored: 7.0/10 for action: search_files('auth', '.', '*.py')
+2025-09-01 14:43:01 | DEBUG | ⬆️ Backpropagated score 7.0 through tree
+2025-09-01 14:43:01 | INFO | 🚨 SQL Injection vulnerability detected in ['/home/ubuntu/lats/tests/run_agent_demo.py', '/home/ubuntu/lats/tests/test_official_lats.py', '/home/ubuntu/lats/tests/test_performance_benchmarks.py', '/home/ubuntu/lats/tests/test_langmem_sqlite_integration.py', '/home/ubuntu/lats/tests/raw_lats_test.py', '/home/ubuntu/lats/tests/final_verification.py', '/home/ubuntu/lats/tests/real_lats_test.py', '/home/ubuntu/lats/tests/test_lats_integration.py', '/home/ubuntu/lats/tests/test_filesystem_tools.py', '/home/ubuntu/lats/tests/simple_agent_demo.py', '/home/ubuntu/lats/tests/real_ollama_test.py', '/home/ubuntu/lats/tests/sample_codebase/auth/__init__.py', '/home/ubuntu/lats/tests/sample_codebase/auth/login.py']
+2025-09-01 14:43:01 | SUCCESS | 🚨 Vulnerability detected: SQL Injection - Initiating deep analysis
+2025-09-01 14:43:01 | INFO | 🔍 Generated 42 deep follow-up actions for SQL Injection
+2025-09-01 14:43:01 | INFO | ⚡ Executing action: read_file('/home/ubuntu/lats/tests/run_agent_demo.py', 1, 500)
+2025-09-01 14:43:01 | DEBUG | 📝 Action observation:    1: #!/usr/bin/env python3
+   2: """
+   3: Demo script to run LATS agent against sample codebase
+   4: Shows actual agent outputs and tree exploration
+   5: """
+   6: 
+   7: import asyncio
+   8: import sys
+   9: import os
+  10: from pathlib import Path
+  11: 
+  12: # Setup paths
+  13: sys.path.ins...
+2025-09-01 14:43:04 | INFO | 📊 Action scored: 2.0/10 for action: read_file('/home/ubuntu/lats/tests/run_agent_demo.py', 1, 500)
+2025-09-01 14:43:04 | DEBUG | ⬆️ Backpropagated score 2.0 through tree
+2025-09-01 14:43:04 | INFO | ⚡ Executing action: read_file('/home/ubuntu/lats/tests/test_official_lats.py', 1, 500)
+2025-09-01 14:43:04 | DEBUG | 📝 Action observation:    1: #!/usr/bin/env python3
+   2: """
+   3: Test using official LangGraph LATS implementation
+   4: Agent explores and discovers vulnerabilities autonomously
+   5: """
+   6: 
+   7: import asyncio
+   8: import sys
+   9: import os
+  10: from pathlib import Path
+  11: 
+  12: # Setup paths
+  13: sys.pa...
+2025-09-01 14:43:08 | INFO | 📊 Action scored: 5.0/10 for action: read_file('/home/ubuntu/lats/tests/test_official_lats.py', 1, 500)
+2025-09-01 14:43:08 | DEBUG | ⬆️ Backpropagated score 5.0 through tree
+2025-09-01 14:43:08 | INFO | ⚡ Executing action: read_file('/home/ubuntu/lats/tests/test_performance_benchmarks.py', 1, 500)
+2025-09-01 14:43:08 | DEBUG | 📝 Action observation:    1: """
+   2: Performance Benchmarks for LATS System
+   3: Measures real-world performance with no mocks
+   4: """
+   5: 
+   6: import asyncio
+   7: import os
+   8: import sys
+   9: import time
+  10: import tracemalloc
+  11: from pathlib import Path
+  12: from typing import Dict, List, Any, Tuple
+...
+2025-09-01 14:43:12 | INFO | 📊 Action scored: 2.0/10 for action: read_file('/home/ubuntu/lats/tests/test_performance_benchmarks.py', 1, 500)
+2025-09-01 14:43:12 | DEBUG | ⬆️ Backpropagated score 2.0 through tree
+2025-09-01 14:43:12 | INFO | ⚡ Executing action: read_file('/home/ubuntu/lats/tests/test_langmem_sqlite_integration.py', 1, 500)
+2025-09-01 14:43:12 | DEBUG | 📝 Action observation:    1: #!/usr/bin/env python3
+   2: """
+   3: Comprehensive functional tests for langmem and SQLite checkpointing
+   4: NO MOCKS - Real services, real embeddings, real persistence
+   5: """
+   6: 
+   7: import asyncio
+   8: import os
+   9: import sys
+  10: import tempfile
+  11: from pathlib import Pa...
+2025-09-01 14:43:17 | INFO | 📊 Action scored: 4.0/10 for action: read_file('/home/ubuntu/lats/tests/test_langmem_sqlite_integration.py', 1, 500)
+2025-09-01 14:43:17 | DEBUG | ⬆️ Backpropagated score 4.0 through tree
+2025-09-01 14:43:17 | INFO | ⚡ Executing action: read_file('/home/ubuntu/lats/tests/raw_lats_test.py', 1, 500)
+2025-09-01 14:43:17 | DEBUG | 📝 Action observation:    1: #!/usr/bin/env python3
+   2: """
+   3: Raw LATS test - shows all real agent outputs, tool calls, and findings
+   4: No sanitized messages, just the raw agent working
+   5: """
+   6: 
+   7: import asyncio
+   8: import sys
+   9: import os
+  10: from pathlib import Path
+  11: 
+  12: # Setup paths...
+2025-09-01 14:43:22 | INFO | 📊 Action scored: 3.0/10 for action: read_file('/home/ubuntu/lats/tests/raw_lats_test.py', 1, 500)
+2025-09-01 14:43:22 | DEBUG | ⬆️ Backpropagated score 3.0 through tree
+2025-09-01 14:43:22 | INFO | ⚡ Executing action: read_file('/home/ubuntu/lats/tests/final_verification.py', 1, 500)
+2025-09-01 14:43:22 | DEBUG | 📝 Action observation:    1: #!/usr/bin/env python3
+   2: """
+   3: Final Verification - Ensures ALL tests pass 100%
+   4: """
+   5: 
+   6: import os
+   7: import sys
+   8: import asyncio
+   9: from pathlib import Path
+  10: 
+  11: # Setup paths
+  12: sys.path.insert(0, str(Path(__file__).parent.parent))
+  13: os.environ[...
+2025-09-01 14:43:26 | INFO | 📊 Action scored: 4.0/10 for action: read_file('/home/ubuntu/lats/tests/final_verification.py', 1, 500)
+2025-09-01 14:43:26 | DEBUG | ⬆️ Backpropagated score 4.0 through tree
+2025-09-01 14:43:26 | INFO | ⚡ Executing action: read_file('/home/ubuntu/lats/tests/real_lats_test.py', 1, 500)
+2025-09-01 14:43:26 | DEBUG | 📝 Action observation:    1: #!/usr/bin/env python3
+   2: """
+   3: Real LATS algorithm test - agent explores and discovers on its own
+   4: """
+   5: 
+   6: import asyncio
+   7: import sys
+   8: import os
+   9: from pathlib import Path
+  10: 
+  11: # Setup paths
+  12: sys.path.insert(0, str(Path(__file__).parent.parent))...
+2025-09-01 14:43:32 | INFO | 📊 Action scored: 2.0/10 for action: read_file('/home/ubuntu/lats/tests/real_lats_test.py', 1, 500)
+2025-09-01 14:43:32 | DEBUG | ⬆️ Backpropagated score 2.0 through tree
+2025-09-01 14:43:32 | INFO | ⚡ Executing action: read_file('/home/ubuntu/lats/tests/test_lats_integration.py', 1, 500)
+2025-09-01 14:43:32 | DEBUG | 📝 Action observation:    1: """
+   2: LATS Integration Tests
+   3: Real-world tests with measurable outcomes, no mocks
+   4: """
+   5: 
+   6: import asyncio
+   7: import os
+   8: import sys
+   9: import time
+  10: from pathlib import Path
+  11: from typing import Dict, List, Any, Tuple
+  12: 
+  13: # Add parent directory...
+2025-09-01 14:43:38 | INFO | 📊 Action scored: 2.0/10 for action: read_file('/home/ubuntu/lats/tests/test_lats_integration.py', 1, 500)
+2025-09-01 14:43:38 | DEBUG | ⬆️ Backpropagated score 2.0 through tree
+2025-09-01 14:43:38 | INFO | ⚡ Executing action: read_file('/home/ubuntu/lats/tests/test_filesystem_tools.py', 1, 500)
+2025-09-01 14:43:38 | DEBUG | 📝 Action observation:    1: """
+   2: Filesystem Tools Validation Tests
+   3: Real file operations with measurable outcomes
+   4: """
+   5: 
+   6: import os
+   7: import sys
+   8: import tempfile
+   9: from pathlib import Path
+  10: from typing import Dict, List, Any
+  11: 
+  12: sys.path.insert(0, str(Path(__file__).par...
+2025-09-01 14:43:43 | INFO | 📊 Action scored: 2.0/10 for action: read_file('/home/ubuntu/lats/tests/test_filesystem_tools.py', 1, 500)
+2025-09-01 14:43:43 | DEBUG | ⬆️ Backpropagated score 2.0 through tree
+2025-09-01 14:43:43 | INFO | ⚡ Executing action: read_file('/home/ubuntu/lats/tests/simple_agent_demo.py', 1, 500)
+2025-09-01 14:43:43 | DEBUG | 📝 Action observation:    1: #!/usr/bin/env python3
+   2: """
+   3: Simple demo showing LATS agent findings in sample codebase
+   4: """
+   5: 
+   6: import asyncio
+   7: import sys
+   8: import os
+   9: from pathlib import Path
+  10: 
+  11: # Setup paths
+  12: sys.path.insert(0, str(Path(__file__).parent.parent))
+  13: o...
+2025-09-01 14:43:50 | INFO | 📊 Action scored: 4.0/10 for action: read_file('/home/ubuntu/lats/tests/simple_agent_demo.py', 1, 500)
+2025-09-01 14:43:50 | DEBUG | ⬆️ Backpropagated score 4.0 through tree
+2025-09-01 14:43:55 | INFO | 🎯 LLM determined investigation is comprehensive
+2025-09-01 14:43:55 | SUCCESS | 🎉 Comprehensive investigation complete!
+2025-09-01 14:43:55 | SUCCESS | ✅ Investigation completed in 66.28s
+2025-09-01 14:43:55 | INFO | 📊 Final stats: 13 nodes, depth 2, score 7.0
+2025-09-01 14:43:55 | INFO | 📝 Generating comprehensive investigation report: lats_investigation_report_20250901_144355.md
+2025-09-01 14:43:59 | SUCCESS | 📄 Investigation report saved: lats_investigation_report_20250901_144355.md

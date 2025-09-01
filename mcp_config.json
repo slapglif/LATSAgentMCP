@@ -1,0 +1,83 @@
+{
+  "name": "lats-codebase-analyzer",
+  "version": "1.0.0",
+  "description": "Deep codebase analysis using Language Agent Tree Search (LATS)",
+  "author": "LATS Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/example/lats-mcp-server"
+  },
+  "mcp": {
+    "server": {
+      "command": "python",
+      "args": ["mcp_server.py"],
+      "env": {
+        "PYTHONPATH": "/home/ubuntu/lats"
+      }
+    },
+    "tools": [
+      {
+        "name": "analyze_codebase",
+        "description": "Perform comprehensive deep codebase analysis using LATS methodology",
+        "parameters": {
+          "task": {
+            "type": "string",
+            "description": "Analysis task (e.g., 'Understand the authentication system', 'Find performance issues')"
+          },
+          "codebase_path": {
+            "type": "string", 
+            "description": "Path to codebase directory",
+            "default": "."
+          },
+          "generate_report": {
+            "type": "boolean",
+            "description": "Generate detailed markdown report",
+            "default": true
+          }
+        }
+      },
+      {
+        "name": "quick_codebase_overview",
+        "description": "Get quick overview of codebase structure and metrics",
+        "parameters": {
+          "codebase_path": {
+            "type": "string",
+            "description": "Path to codebase directory", 
+            "default": "."
+          }
+        }
+      },
+      {
+        "name": "find_code_patterns",
+        "description": "Search for specific patterns across the codebase",
+        "parameters": {
+          "pattern": {
+            "type": "string",
+            "description": "Pattern to search for (regex supported)"
+          },
+          "codebase_path": {
+            "type": "string",
+            "description": "Path to search in",
+            "default": "."
+          },
+          "file_extension": {
+            "type": "string", 
+            "description": "File types to search",
+            "default": "*.py"
+          }
+        }
+      },
+      {
+        "name": "analyze_file_structure",
+        "description": "Analyze structure of a specific code file",
+        "parameters": {
+          "file_path": {
+            "type": "string",
+            "description": "Path to file to analyze"
+          }
+        }
+      }
+    ]
+  }
+}
